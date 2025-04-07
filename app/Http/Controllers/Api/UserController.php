@@ -27,6 +27,7 @@ class UserController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' =>$data['password'],
+            'user_type'=>'user'
         ]);
 
         $token = $user->createToken($user->name . 'AuthToken')->plainTextToken;
@@ -56,7 +57,7 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-       
+
         Auth::user()->tokens()->delete();
         return response()->json([
             "message" => __('main.log_out')

@@ -16,11 +16,11 @@ Route::controller(UserController::class)->prefix('users')->group(function(){
 });
 
 // Products end points
-Route::get('products', [ProductController::class, 'index'])->middleware('auth:sanctum');
+Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{id}', [ProductController::class, 'show']);
 
 // Cart end points
 Route::get('cart', [CartController::class, 'index']);
-Route::post('cart', [CartController::class, 'store']);
+Route::post('cart', [CartController::class, 'store'])->middleware('auth:sanctum');
 
 
