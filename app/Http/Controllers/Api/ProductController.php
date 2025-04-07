@@ -2,26 +2,35 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    use ApiResponse;
+
     public function index()
     {
-        return response()->json([
-            'data' => Product::with('ingredients')->get(),
-            'success' => true
-        ]);
+        return $this->successResponse(
+            ProductResource::collection(Product::with('ingredients')->get()),
+            'Fetched successfully'
+        );
     }
 
     public function show($id)
     {
-        $product = Product::with('ingredients')->findOrFail($id);
-        return response()->json([
-            'data' => $product,
-            'success' => true
-        ]);
+        $product = Product::with('ingredients')->find($id);
+        
+        if (! $product) {
+            return $this->errorResponse('Product not found', 404);
+        }
+
+        return $this->successResponse(
+            new  ProductResource($product),
+            'Fetched successfully'
+        );
     }
 }
