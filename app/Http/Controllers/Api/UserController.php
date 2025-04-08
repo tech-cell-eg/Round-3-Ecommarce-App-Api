@@ -16,24 +16,24 @@ class UserController extends Controller
 {
     use ApiResponser;
 
-    public function index(){
-        $users=User::orderBy('id','desc')->paginate(5);
+    public function index()
+    {
+        $users = User::orderBy('id', 'desc')->paginate(5);
         return $this->success($users);
     }
-    public function store(StoreUserRequest $request){
+    public function store(StoreUserRequest $request)
+    {
         $data = $request->validated();
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' =>$data['password'],
-            'user_type'=>'user'
+            'password' => $data['password'],
+            'user_type' => 'user'
         ]);
 
         $token = $user->createToken($user->name . 'AuthToken')->plainTextToken;
         return $this->success([$user, 'access_token' => $token], __('main.register_customer_is_done'));
-
-
     }
 
     public function login(Request $request)

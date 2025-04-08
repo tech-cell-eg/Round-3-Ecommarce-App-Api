@@ -15,14 +15,13 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::where('user_id', Auth::user()->id ?? '')->paginate(5);
-        return $this->success([$orders],'success');
+        return $this->success([$orders], 'success');
     }
     public function show($id)
     {
         $order = Order::where('user_id', Auth::user()->id ?? '')->find($id);
         $order_products = OrderProduct::where('order_id', $order->id)
             ->with(['product', 'order'])->orderBy('id', 'DESC')->get();
-        return $this->success([$orders,order_products],'success');
+        return $this->success([$order, $order_products], 'success');
     }
-
 }
