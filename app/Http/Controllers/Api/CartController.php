@@ -14,14 +14,13 @@ class CartController extends Controller
 {
     use ApiResponse;
 
-    public function index(Request $request)
+    public function index()
     {
         /* 
         ** Get all the products in the cart for all users
-        ** dont foget to replace $request->user_id with Auth::id() when using authentication
         */
         return $this->successResponse(
-            CartResource::collection(Cart::where('user_id', $request->user_id)->with('product')->get()),
+            CartResource::collection(Cart::where('user_id', Auth::id())->with('product')->get()),
             'Fetched successfully'
         );
     }
@@ -30,23 +29,28 @@ class CartController extends Controller
     {
         /* 
         ** Find if the product is already in the cart and update the quantity for the user
-        ** and dont foget to replace $request->user_id with Auth::id() when using authentication
         */
 
-        $product = Cart::where('product_id', $request->product_id)->where('user_id', $request->user_id)->first();
+        $cart_item = Cart::where('product_id', $request->product_id)->where('user_id', Auth::id())->first();
 
-        if ($product) {
-            $product->quantity += $request->quantity;
-            $product->save();
-            return $this->successResponse($product, 'Product updated successfully');
+        if ($cart_item) {
+            $cart_item->quantity += $request->quantity;
+            $cart_item->save();
+            return $this->successResponse(
+                new CartResource($cart_item->load('product')),
+                'Product updated successfully'
+            );
         }
 
-        $cart = Cart::create([
-            'user_id' => $request->user_id,
+        $cart_item = Cart::create([
+            'user_id' => Auth::id(),
             'product_id' => $request->product_id,
             'quantity' => $request->quantity
         ]);
 
-        return $this->successResponse($cart, 'Product added to cart successfully');
+        return $this->successResponse(
+            new CartResource($cart_item->load('product')),
+            'Product added to cart successfully'
+        );
     }
 }

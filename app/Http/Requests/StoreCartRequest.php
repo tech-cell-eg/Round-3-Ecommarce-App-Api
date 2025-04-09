@@ -22,7 +22,6 @@ class StoreCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required',
             'product_id' => 'required',
             'quantity' => 'required|numeric|min:1',
         ];
@@ -31,7 +30,6 @@ class StoreCartRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'User ID is required.',
             'product_id.required' => 'Product ID is required.',
             'quantity.required' => 'Quantity is required.',
             'quantity.numeric' => 'Quantity must be a number.',

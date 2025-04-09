@@ -26,13 +26,14 @@ class UserController extends Controller
         $data = $request->validated();
 
         $user = User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => $data['password'],
             'user_type' => 'user'
         ]);
 
-        $token = $user->createToken($user->name . 'AuthToken')->plainTextToken;
+        $token = $user->createToken($user->first_name . $user->last_name . 'AuthToken')->plainTextToken;
         return $this->success([$user, 'access_token' => $token], __('main.register_customer_is_done'));
     }
 
@@ -43,14 +44,12 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required|'
         ]);
+
         $user = User::where('email', $input['email'])->first();
         if (!$user || !Hash::check($input['password'], $user->password)) {
-
-            return response()->json([
-                'message' => 'Invalid Credentials'
-            ], 401);
+            return $this->error('Invalid Credentials', 401);
         } else {
-            $token = $user->createToken($user->name . 'AuthToken')->plainTextToken;
+            $token = $user->createToken($user->first_name . $user->last_name . 'AuthToken')->plainTextToken;
             return $this->success([$user, 'user_type' => $user->user_type, 'access_token' => $token], __('main.login_authenticated_is_done'));
         }
     }
@@ -59,8 +58,6 @@ class UserController extends Controller
     {
 
         Auth::user()->tokens()->delete();
-        return response()->json([
-            "message" => __('main.log_out')
-        ]);
+        return $this->success(null, __('main.log_out'));
     }
 }

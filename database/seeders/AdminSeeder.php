@@ -16,15 +16,18 @@ class AdminSeeder extends Seeder
     {
 
         //// add admin
-        $admin=User::create([
-            'name' => 'Admin User',
+        $admin = User::create([
+            'first_name' => 'Admin',
+            'last_name' => 'User',
             'email' => 'admin@example.com',
-            'user_type'=>'admin',
+            'user_type' => 'admin',
             'password' => Hash::make('password'), // Securely hash password
         ]);
-    //      // Create a Sanctum token for the admin user
-    // $token = $admin->createToken('admin-token')->plainTextToken;
-    //  // Optional: print or log the token
-    //  echo "Admin Sanctum Token: $token\n";
+
+        // Create a Sanctum token for the admin user
+
+        // $token = $admin->createToken('admin-token')->plainTextToken;
+        //  // Optional: print or log the token
+        //  echo "Admin Sanctum Token: $token\n";
     }
 }
