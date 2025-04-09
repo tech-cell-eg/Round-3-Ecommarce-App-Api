@@ -22,7 +22,7 @@ class OrderFactory extends Factory
     {
         return [
             'order_no' => 'ORD-' . strtoupper(Str::random(10)),
-            'total' => $this->faker->randomFloat(2, 10, 500),
+            'total' => (float) number_format($this->faker->randomFloat(2, 1, 100), 2, '.', ''),
             'payment_method' => $this->faker->randomElement(['cash', 'credit_card']),
             'status' => $this->faker->randomElement(['pending', 'processing', 'completed']),
             'user_id' => User::inRandomOrder()->first()?->id ?? 1

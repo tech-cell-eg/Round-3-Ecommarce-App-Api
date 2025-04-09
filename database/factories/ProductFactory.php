@@ -19,7 +19,7 @@ class ProductFactory extends Factory
         return [
             'title' => $this->faker->word(),
             'description' => $this->faker->sentence(),
-            'price' => $this->faker->randomFloat(2, 1, 100),
+            'price' => (float) number_format($this->faker->randomFloat(2, 1, 100), 2, '.', ''),
             'stock' => $this->faker->randomNumber(2),
             'image_url' => $this->faker->imageUrl(),
         ];

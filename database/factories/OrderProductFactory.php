@@ -21,7 +21,7 @@ class OrderProductFactory extends Factory
         return [
             'order_id' => Order::inRandomOrder()->first()?->id ?? 1,
             'product_id' => Product::inRandomOrder()->first()?->id ?? 1,
-            'price' => $this->faker->randomFloat(2, 5, 100),
+            'price' => (float) number_format($this->faker->randomFloat(2, 1, 100), 2, '.', ''),
             'quantity' => $this->faker->numberBetween(1, 10),
         ];
     }
