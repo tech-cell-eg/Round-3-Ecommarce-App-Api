@@ -31,25 +31,25 @@ class CartController extends Controller
         ** Find if the product is already in the cart and update the quantity for the user
         */
 
-        $product = Cart::where('product_id', $request->product_id)->where('user_id', Auth::id())->first();
+        $cart_item = Cart::where('product_id', $request->product_id)->where('user_id', Auth::id())->first();
 
-        if ($product) {
-            $product->quantity += $request->quantity;
-            $product->save();
+        if ($cart_item) {
+            $cart_item->quantity += $request->quantity;
+            $cart_item->save();
             return $this->successResponse(
-                new CartResource($product->load('product')),
+                new CartResource($cart_item->load('product')),
                 'Product updated successfully'
             );
         }
 
-        $cart = Cart::create([
+        $cart_item = Cart::create([
             'user_id' => Auth::id(),
             'product_id' => $request->product_id,
             'quantity' => $request->quantity
         ]);
 
         return $this->successResponse(
-            new CartResource($cart->load('product')),
+            new CartResource($cart_item->load('product')),
             'Product added to cart successfully'
         );
     }
