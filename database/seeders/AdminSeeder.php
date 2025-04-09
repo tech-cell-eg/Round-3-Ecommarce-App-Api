@@ -22,6 +22,9 @@ class AdminSeeder extends Seeder
             'email' => 'admin@example.com',
             'user_type' => 'admin',
             'password' => Hash::make('password'), // Securely hash password
+            'email_verified_at' => now(),
+            'avatar' => fake()->imageUrl(512, 512, 'people', true),
+            'phone_number' => '0101234567'
         ]);
 
         // Create a Sanctum token for the admin user
