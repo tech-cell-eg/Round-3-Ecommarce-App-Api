@@ -18,11 +18,15 @@ class OrderProductFactory extends Factory
      */
     public function definition(): array
     {
+        $product = Product::inRandomOrder()->first() ?? Product::factory()->create();
+        $quantity = $this->faker->numberBetween(1, 10);
+        $unitPrice = $product->price ?? $this->faker->randomFloat(2, 1, 100);
+
         return [
-            'order_id' => Order::inRandomOrder()->first()?->id ?? 1,
-            'product_id' => Product::inRandomOrder()->first()?->id ?? 1,
-            'price' => (float) number_format($this->faker->randomFloat(2, 1, 100), 2, '.', ''),
-            'quantity' => $this->faker->numberBetween(1, 10),
+            'order_id' => Order::inRandomOrder()->first()?->id ?? Order::factory()->create()->id,
+            'product_id' => $product->id,
+            'price' => round($unitPrice * $quantity, 2),
+            'quantity' => $quantity,
         ];
     }
 }

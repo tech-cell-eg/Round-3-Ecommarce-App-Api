@@ -2,32 +2,36 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\OrderProduct;
 use Illuminate\Support\Facades\Auth;
-use App\Traits\ApiResponser;
 
 class OrderController extends Controller
 {
-    use ApiResponser;
+    use ApiResponse;
+
     public function index()
     {
-        $orders = Order::where('user_id', Auth::id() ?? '')->paginate(5);
-        return $this->success([$orders], 'success');
+        $orders = Order::where('user_id', Auth::id() ?? '')
+            ->with('payment')
+            ->paginate(5);
+
+        return $this->successResponse(OrderResource::collection($orders), 'Fetched successfully');
     }
     public function show($id)
     {
-        $order = Order::where('user_id', Auth::id() ?? '')->find($id);
+        $order = Order::with(['payment', 'orderProducts'])
+            ->where('user_id', Auth::id() ?? '')
+            ->where('id', $id)
+            ->first();
 
         if (! $order) {
-            return $this->error('Order not found', 404);
+            return $this->errorResponse('Order not found', 404);
         }
 
-        $order_products = OrderProduct::where('order_id', $order->id)
-            ->with(['product', 'order'])->orderBy('id', 'DESC')->get();
-
-        return $this->success([$order, $order_products], 'success');
+        return $this->successResponse(new OrderResource($order), 'Fetched successfully');
     }
 }

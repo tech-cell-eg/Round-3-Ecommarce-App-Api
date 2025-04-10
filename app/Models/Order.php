@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
@@ -24,5 +25,11 @@ class Order extends Model
     public function getFormattedCreatedAtAttribute()
     {
         return $this->created_at->format('Y/m/d');
+    }
+
+    // Define the relationship between Order and Payment
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class);
     }
 }
