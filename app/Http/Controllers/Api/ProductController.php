@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\ApiResponse;
+use App\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;

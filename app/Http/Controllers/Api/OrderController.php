@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
-use App\Traits\ApiResponser;
 
 class OrderController extends Controller
 {
-    use ApiResponser;
+    use ApiResponse;
+
     public function index()
     {
         $orders = Order::where('user_id', Auth::id() ?? '')
             ->with('payment')
             ->paginate(5);
 
-        return $this->success(OrderResource::collection($orders), 'success');
+        return $this->successResponse(OrderResource::collection($orders), 'Fetched successfully');
     }
     public function show($id)
     {
@@ -28,9 +29,9 @@ class OrderController extends Controller
             ->first();
 
         if (! $order) {
-            return $this->error('Order not found', 404);
+            return $this->errorResponse('Order not found', 404);
         }
 
-        return $this->success(new OrderResource($order), 'success');
+        return $this->successResponse(new OrderResource($order), 'Fetched successfully');
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-
+use App\Traits\ApiResponse;
 use App\Models\User;
-use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
@@ -14,12 +13,12 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    use ApiResponser;
+    use ApiResponse;
 
     public function index()
     {
         $users = User::orderBy('id', 'desc')->paginate(5);
-        return $this->success($users);
+        return $this->successResponse($users, 'Fetched successfully');
     }
     public function store(StoreUserRequest $request)
     {
@@ -34,7 +33,7 @@ class UserController extends Controller
         ]);
 
         $token = $user->createToken($user->first_name . $user->last_name . 'AuthToken')->plainTextToken;
-        return $this->success([$user, 'access_token' => $token], __('main.register_customer_is_done'));
+        return $this->successResponse([$user, 'access_token' => $token], __('main.register_customer_is_done'));
     }
 
     public function login(Request $request)
@@ -47,10 +46,10 @@ class UserController extends Controller
 
         $user = User::where('email', $input['email'])->first();
         if (!$user || !Hash::check($input['password'], $user->password)) {
-            return $this->error('Invalid Credentials', 401);
+            return $this->errorResponse('Invalid Credentials', 401);
         } else {
             $token = $user->createToken($user->first_name . $user->last_name . 'AuthToken')->plainTextToken;
-            return $this->success([$user, 'user_type' => $user->user_type, 'access_token' => $token], __('main.login_authenticated_is_done'));
+            return $this->successResponse([$user, 'user_type' => $user->user_type, 'access_token' => $token], __('main.login_authenticated_is_done'));
         }
     }
 
@@ -58,6 +57,6 @@ class UserController extends Controller
     {
 
         Auth::user()->tokens()->delete();
-        return $this->success(null, __('main.log_out'));
+        return $this->successResponse(null, __('main.log_out'));
     }
 }
