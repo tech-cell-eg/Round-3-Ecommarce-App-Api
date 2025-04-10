@@ -17,11 +17,12 @@ class PaymentFactory extends Factory
      */
     public function definition(): array
     {
+        $order = Order::inRandomOrder()->first() ?? Order::factory()->create();
         return [
-            'order_id' => Order::inRandomOrder()->first()?->id ?? 1,
+            'order_id' => $order->id,
             'payment_method' => $this->faker->randomElement(['cash', 'credit_card']),
             'status' => $this->faker->randomElement(['pending', 'processing', 'completed']),
-            'paid_amount' => $this->faker->randomFloat(2, 0, 100),
+            'paid_amount' => $this->faker->randomFloat(2, 0, $order->total),
             'deposit_amount' => $this->faker->randomFloat(2, 0, 100),
         ];
     }
