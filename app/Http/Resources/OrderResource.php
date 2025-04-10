@@ -20,6 +20,7 @@ class OrderResource extends JsonResource
             "total" => $this->total,
             "status" => $this->status,
             "payment_details" => new PaymentResource($this->whenLoaded('payment')),
+            "order_items" => OrderProductResource::collection($this->orderProducts),
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at
         ];
