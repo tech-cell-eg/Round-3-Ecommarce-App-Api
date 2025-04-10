@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('order_no')->unique();
             $table->float('total')->default(0);
-            $table->string('payment_method')->default('cash');
             $table->string('status')->default('panding');
             $table->unsignedBigInteger('user_id')->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
