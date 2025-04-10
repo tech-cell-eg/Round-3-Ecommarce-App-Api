@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->string('payment_method');
-            $table->string('status');
+            $table->enum('status', ['pending', 'processing', 'completed', 'failed', 'cancelled'])->default('pending');
             $table->string('paid_amount');
             $table->string('deposit_amount');
             $table->timestamps();
