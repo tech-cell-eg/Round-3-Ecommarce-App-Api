@@ -15,14 +15,56 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = Category::factory(10)->create();
-        $ingredients = Ingredient::factory(50)->create();
+        $categoryNames = ['hot', 'popular', 'top', 'combo'];
+        $categories = collect();
+
+        foreach ($categoryNames as $name) {
+            $categories->push(Category::create(['name' => $name]));
+        }
+
+        $ingredientNames = [
+            'tomato',
+            'onion',
+            'garlic',
+            'lettuce',
+            'cucumber',
+            'carrot',
+            'potato',
+            'bell pepper',
+            'spinach',
+            'cabbage',
+            'apple',
+            'banana',
+            'strawberry',
+            'pineapple',
+            'mango',
+            'orange',
+            'chicken',
+            'beef',
+            'cheese',
+            'eggs',
+            'milk',
+            'butter',
+            'flour',
+            'sugar',
+            'salt',
+            'pepper',
+            'oregano',
+            'basil',
+            'parsley',
+            'cinnamon',
+        ];
+
+        $ingredients = collect();
+        foreach ($ingredientNames as $name) {
+            $ingredients->push(Ingredient::create(['name' => $name]));
+        }
 
         Product::factory(20)->create()->each(function ($product) use ($categories, $ingredients) {
-            $assignedCategories = $categories->random(rand(1, 4))->pluck('id')->toArray();
+            $assignedCategories = $categories->random(rand(1, 2))->pluck('id')->toArray();
             $product->categories()->sync($assignedCategories);
 
-            $assignedIngredients = $ingredients->random(rand(2, 6))->pluck('id')->toArray();
+            $assignedIngredients = $ingredients->random(rand(3, 6))->pluck('id')->toArray();
             $product->ingredients()->sync($assignedIngredients);
         });
     }
