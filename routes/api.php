@@ -10,12 +10,13 @@ use App\Http\Controllers\Api\OrderController;
 
 
 // authenticated end points
-Route::controller(UserController::class)->prefix('users')->group(function(){
-    Route::get('display','index');
-    Route::post('/register','store');
-    Route::post('/login','login');
+Route::controller(UserController::class)->prefix('auth')->group(function () {
+    Route::post('/register', 'store');
+    Route::post('/login', 'login');
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
 });
+
+Route::get('/users', 'index');
 
 // Products end points
 Route::get('products', [ProductController::class, 'index']);
