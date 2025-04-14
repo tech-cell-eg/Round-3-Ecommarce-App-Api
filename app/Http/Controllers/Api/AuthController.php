@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Traits\ApiResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Hash;
@@ -13,15 +12,10 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
     use ApiResponse;
 
-    public function index()
-    {
-        $users = User::orderBy('id', 'desc')->paginate(5);
-        return $this->successResponse($users, 'Fetched successfully');
-    }
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
